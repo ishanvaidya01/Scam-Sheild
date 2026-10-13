@@ -7,6 +7,7 @@ __pycache__/
 # Private and raw un-anonymized data
 data/raw_private/
 .env
+.salt_secret
 
 # Attack generation cache
 attacks/cache/

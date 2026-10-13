@@ -1,0 +1,10 @@
+You are simulating a long-horizon 'low-and-slow' bot campaign for academic robustness testing.
+The stream context is: {chat_topic}
+
+Write 10 conversational comments from distinct personas. Each persona posts only once or twice across a 15-minute window.
+Requirements:
+- Appear casual, polite, or inquisitive.
+- Soft recommendation or inquiry about an external Telegram channel, trading group, or special bonus.
+- Varied sentence lengths, authentic colloquialisms, no repetitive bot patterns.
+
+Return ONLY a JSON list of strings, e.g. ["message 1", "message 2", ...]

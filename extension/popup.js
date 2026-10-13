@@ -1,18 +1,8 @@
-const SENS_TEXT = {
-  1: "Lenient — only flags coordinated bot rings.",
-  2: "Conservative — flags strong scam signals only.",
-  3: "Balanced — flags clear threats only.",
-  4: "Aggressive — flags moderate suspicious patterns.",
-  5: "Strict — maximum sensitivity, higher false positive rate.",
-};
-
 document.addEventListener("DOMContentLoaded", () => {
   const toggle      = document.getElementById("toggleShield");
   const statusDot   = document.getElementById("statusDot");
   const statusText  = document.getElementById("statusText");
   const headerGlow  = document.getElementById("headerGlow");
-  const slider      = document.getElementById("sensitivitySlider");
-  const sensDesc    = document.getElementById("sensDesc");
   const statScanned = document.getElementById("statScanned");
   const statFlagged = document.getElementById("statFlagged");
   const statScam    = document.getElementById("statScam");
@@ -32,11 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  chrome.storage.local.get({ isEnabled: true, sensitivity: 3 }, (res) => {
+  chrome.storage.local.get({ isEnabled: true }, (res) => {
     toggle.checked = res.isEnabled;
-    slider.value = res.sensitivity;
     applyUIState(res.isEnabled);
-    sensDesc.textContent = SENS_TEXT[res.sensitivity] || SENS_TEXT[3];
   });
 
   toggle.addEventListener("change", (e) => {
@@ -44,16 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     chrome.storage.local.set({ isEnabled: on });
     applyUIState(on);
     chrome.runtime.sendMessage({ type: "SET_SHIELD_STATE", enabled: on });
-  });
-
-  slider.addEventListener("input", (e) => {
-    sensDesc.textContent = SENS_TEXT[+e.target.value] || SENS_TEXT[3];
-  });
-
-  slider.addEventListener("change", (e) => {
-    const val = +e.target.value;
-    chrome.storage.local.set({ sensitivity: val });
-    if (bgPort) bgPort.postMessage({ type: "SET_SENSITIVITY", value: val });
   });
 
   function applyUIState(on) {

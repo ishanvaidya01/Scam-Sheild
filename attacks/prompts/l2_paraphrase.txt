@@ -1,0 +1,9 @@
+You are simulating malicious social media bot campaigns for research purposes.
+Write 15 unique, natural-sounding paraphrases of the following cryptocurrency giveaway scam intent:
+"Deposit Bitcoin or Ethereum to the official giveaway address to receive double back instantly. Limited time reward."
+
+Guidelines:
+- Each variation must sound distinct in vocabulary and sentence structure.
+- Vary punctuation and capitalization naturally.
+- Include typical call-to-action phrases (e.g. check the link, telegram support, limited slots).
+- Return ONLY a JSON list of strings, e.g. ["sentence 1", "sentence 2", ...]

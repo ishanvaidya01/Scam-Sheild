@@ -1,0 +1,36 @@
+# data/sessions.yaml
+# Provide YouTube stream URLs, past broadcasts, or premiere links for real session collection.
+# Three groups:
+#   (a) scam_waves: Streams that attracted giveaway, investment, or crypto bot scam waves.
+#   (b) organic_hype: Esports finals, major game launches, premieres, or raids for false-positive measurement.
+#   (c) quiet: Low-velocity conversational streams, podcasts, or slow gameplay.
+
+scam_waves:
+  - id: "scam_wave_01"
+    url: "https://www.youtube.com/watch?v=REPLACE_WITH_SCAM_STREAM_1"
+    description: "Crypto giveaway wave session"
+  - id: "scam_wave_02"
+    url: "https://www.youtube.com/watch?v=REPLACE_WITH_SCAM_STREAM_2"
+    description: "Fake support / gift card wave session"
+  - id: "scam_wave_03"
+    url: "https://www.youtube.com/watch?v=REPLACE_WITH_SCAM_STREAM_3"
+    description: "Telegram investment scam wave session"
+
+organic_hype:
+  - id: "hype_stream_01"
+    url: "https://www.youtube.com/watch?v=REPLACE_WITH_HYPE_STREAM_1"
+    description: "Esports championship grand finals"
+  - id: "hype_stream_02"
+    url: "https://www.youtube.com/watch?v=REPLACE_WITH_HYPE_STREAM_2"
+    description: "Game reveal premiere / raid event"
+  - id: "hype_stream_03"
+    url: "https://www.youtube.com/watch?v=REPLACE_WITH_HYPE_STREAM_3"
+    description: "High-velocity live tournament"
+
+quiet:
+  - id: "quiet_stream_01"
+    url: "https://www.youtube.com/watch?v=REPLACE_WITH_QUIET_STREAM_1"
+    description: "Low-velocity podcast / Q&A chat"
+  - id: "quiet_stream_02"
+    url: "https://www.youtube.com/watch?v=REPLACE_WITH_QUIET_STREAM_2"
+    description: "Casual gameplay stream"

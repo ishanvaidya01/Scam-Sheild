@@ -16,7 +16,7 @@
       </div>
       <div class="header-text">
         <h1 class="title">Scam Shield</h1>
-        <p class="subtitle">Real-time comment analysis</p>
+        <p class="subtitle">Live chat campaign detection</p>
       </div>
     </div>
 
@@ -46,40 +46,17 @@
         <div class="stat-divider"></div>
         <div class="stat-cell">
           <div class="stat-num warn" id="statFlagged">0</div>
-          <div class="stat-name">Flagged</div>
+          <div class="stat-name">Suspicious</div>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-cell">
           <div class="stat-num danger" id="statScam">0</div>
-          <div class="stat-name">Scam/Bot</div>
+          <div class="stat-name">Campaign</div>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-label">Sensitivity</div>
-      <div class="slider-area">
-        <span class="sens-edge">Low</span>
-        <div class="range-wrap">
-          <input type="range" id="sensitivitySlider" min="1" max="5" step="1" value="3">
-        </div>
-        <span class="sens-edge">High</span>
-      </div>
-      <div class="sens-desc" id="sensDesc">Balanced — flags clear threats only.</div>
-    </div>
-
-    <div class="card signals-card">
-      <div class="card-label">Signals</div>
-      <div class="signals-list">
-        <div class="signal-item" title="NLP analysis of sentence structure, punctuation, all-caps usage, and entity context (e.g., '@mention' used promotionally)."><span class="sig-dot" style="background:#22d3ee;"></span> 🔤 Linguistic</div>
-        <div class="signal-item" title="ML model trained to detect financial bait, cryptocurrency scams, and self-promotion in the raw text."><span class="sig-dot" style="background:#a78bfa;"></span> 🤖 Classifier</div>
-        <div class="signal-item" title="Detects bot rings by finding multiple accounts posting semantically similar or identical messages simultaneously."><span class="sig-dot" style="background:#fbbf24;"></span> 🔗 Coordination</div>
-        <div class="signal-item" title="Analyzes a user's specific habits in this session (e.g., message velocity, scripted repetition, risky username patterns)."><span class="sig-dot" style="background:#4ade80;"></span> 👤 Behavioral</div>
-        <div class="signal-item" title="Models the chat as a live graph to detect hidden cliques and central template distributor nodes."><span class="sig-dot" style="background:#f87171;"></span> 🕸️ Network</div>
-      </div>
-    </div>
-
-    <div class="footer">Scam Shield v2 &middot; 5-signal ensemble</div>
+    <div class="footer">Scam Shield &middot; Campaign & Coordination Detector</div>
 
   </div>
   <script src="popup.js"></script>

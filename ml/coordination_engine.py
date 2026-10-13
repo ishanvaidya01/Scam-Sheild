@@ -89,25 +89,8 @@ def _skeleton_overlap(sk1: str, sk2: str) -> float:
     return len(t1 & t2) / len(t1 | t2)
 
 
-# ── Poisson burst detector ─────────────────────────────────────────────────────
-def _poisson_burst_pval(window: list, current_time_ms: int, window_seconds: int) -> Optional[float]:
-    if len(window) < MIN_WINDOW_FOR_POISSON:
-        return None
-    try:
-        from scipy.stats import poisson as scipy_poisson
-        oldest_ts = min(c["timestamp"] for c in window)
-        elapsed_seconds = max((current_time_ms - oldest_ts) / 1000.0, 1.0)
-        cutoff = current_time_ms - (window_seconds * 1000)
-        recent_count = sum(1 for c in window if c["timestamp"] >= cutoff)
-        baseline_rate = len(window) / elapsed_seconds
-        expected = baseline_rate * window_seconds
-        if expected < 0.5:
-            return None
-        pval = 1.0 - scipy_poisson.cdf(recent_count - 1, expected)
-        return round(pval, 5)
-    except Exception as e:
-        logger.debug(f"Poisson test error: {e}")
-        return None
+# Poisson burst detector removed in Phase 0 (will be replaced by chat-rate-normalized synchrony in Phase 3)
+
 
 
 def check_coordination(new_comment: dict, recent_window: list) -> dict:
@@ -285,15 +268,7 @@ def check_coordination(new_comment: dict, recent_window: list) -> dict:
                 "other accounts — template-filling attack detected."
             )
 
-    # ── Sub-detector 3: Timing Burst (Poisson) ────────────────────────────────
-    pval = _poisson_burst_pval(recent_window, current_time, TIME_WINDOW_SECONDS)
-    sub_signals["timing_burst_pval"] = pval
-    if pval is not None and pval < BURST_PVAL_THRESHOLD:
-        sub_signals["timing_is_burst"] = True
-        penalty += 0.25
-        reasons_parts.append(
-            f"Statistically anomalous message burst (Poisson p-value={pval:.4f})."
-        )
+
 
     # ── Final decision ────────────────────────────────────────────────────────
     coordination_score = max(0.0, min(1.0, 1.0 - penalty))

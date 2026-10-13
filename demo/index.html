@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scam Shield — Live Campaign & Bot Detection Inspector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="brand">
+        <div class="logo-icon">🛡️</div>
+        <div>
+          <h1 class="brand-title">Scam Shield <span class="badge-version">v2.1 (35% Build)</span></h1>
+          <p class="brand-sub">Real-Time Live Chat Campaign & Coordination Detector</p>
+        </div>
+      </div>
+
+      <div class="header-status">
+        <div class="status-indicator">
+          <span class="status-pulse" id="statusPulse"></span>
+          <span class="status-label" id="statusLabel">Connecting to Replay...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Controls Bar -->
+    <section class="controls-panel">
+      <div class="control-group">
+        <label for="stealthSelect">Stealth Level (RQ1):</label>
+        <select id="stealthSelect" class="styled-select">
+          <option value="L0">L0 — Copy-Paste Burst</option>
+          <option value="L1">L1 — Template Substitution</option>
+          <option value="L2" selected>L2 — LLM Paraphrase</option>
+          <option value="L3">L3 — Contextual Chameleon</option>
+          <option value="L4">L4 — Low-and-Slow Swarm</option>
+          <option value="L3-single">L3-Single — Isolated Stealth Actor</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="speedSelect">Playback Speed:</label>
+        <select id="speedSelect" class="styled-select">
+          <option value="1">1x (Real-Time)</option>
+          <option value="5" selected>5x (Fast Demo)</option>
+          <option value="20">20x (Stress Test)</option>
+        </select>
+      </div>
+
+      <div class="control-group switch-group">
+        <label class="toggle-switch">
+          <input type="checkbox" id="sideBySideToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label">Side-by-Side: Full System vs Text-Only</span>
+      </div>
+
+      <div class="btn-group">
+        <button id="btnPlay" class="btn btn-primary">▶ Start Replay</button>
+        <button id="btnPause" class="btn btn-secondary">⏸ Pause</button>
+        <button id="btnReset" class="btn btn-tertiary">↺ Reset</button>
+      </div>
+    </section>
+
+    <!-- Real-Time Metrics Strip -->
+    <section class="metrics-strip">
+      <div class="metric-card">
+        <span class="metric-title">TOTAL SCANNED</span>
+        <span class="metric-value" id="valScanned">0</span>
+        <span class="metric-sub">Session Messages</span>
+      </div>
+
+      <div class="metric-card">
+        <span class="metric-title">ATTACK MESSAGES</span>
+        <span class="metric-value accent-amber" id="valAttacksTotal">0</span>
+        <span class="metric-sub">Injected Ground Truth</span>
+      </div>
+
+      <div class="metric-card">
+        <span class="metric-title">FULL SYSTEM RECALL (B4)</span>
+        <span class="metric-value accent-green" id="valRecallB4">0.0%</span>
+        <span class="metric-sub" id="subRecallB4">0 / 0 detected</span>
+      </div>
+
+      <div class="metric-card">
+        <span class="metric-title">TEXT-ONLY RECALL (B2)</span>
+        <span class="metric-value accent-red" id="valRecallB2">0.0%</span>
+        <span class="metric-sub" id="subRecallB2">Fails at L2+ Paraphrases</span>
+      </div>
+
+      <div class="metric-card">
+        <span class="metric-title">FULL SYSTEM PRECISION</span>
+        <span class="metric-value accent-cyan" id="valPrecB4">100.0%</span>
+        <span class="metric-sub" id="valFprB4">FPR on Genuine: 0.0%</span>
+      </div>
+
+      <div class="metric-card">
+        <span class="metric-title">ABSTENTION RATE</span>
+        <span class="metric-value accent-purple" id="valAbstained">0</span>
+        <span class="metric-sub">Output: "Unverifiable"</span>
+      </div>
+    </section>
+
+    <!-- Main Workspace -->
+    <main class="main-workspace">
+      <!-- Live Chat Stream Panel -->
+      <section class="chat-container">
+        <div class="panel-header">
+          <h2>Live Stream Chat Replay</h2>
+          <span class="feed-indicator">LIVE FEED</span>
+        </div>
+        <div class="chat-scroll" id="chatFeed">
+          <div class="empty-feed-placeholder" id="placeholderFeed">
+            <p>Click <strong>▶ Start Replay</strong> to stream authentic YouTube chat with injected adversarial attacks.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar: Cluster & Evidence Inspector -->
+      <aside class="sidebar-container">
+        <!-- Active Campaign Cluster -->
+        <div class="side-card">
+          <div class="panel-header">
+            <h3>Active Campaign Cluster (Graph)</h3>
+            <span class="badge-pill" id="clusterStatusBadge">No Active Cluster</span>
+          </div>
+          <div class="cluster-body" id="clusterBody">
+            <div class="cluster-metric-row">
+              <span class="label">Connected Accounts:</span>
+              <span class="val font-mono" id="clusterAccountsCount">0 accounts</span>
+            </div>
+            <div class="cluster-metric-row">
+              <span class="label">Semantic Cohesion:</span>
+              <span class="val font-mono" id="clusterCohesionVal">0.00</span>
+            </div>
+            <div class="cluster-meter-track">
+              <div class="cluster-meter-fill" id="meterCohesion" style="width: 0%;"></div>
+            </div>
+
+            <div class="cluster-metric-row" style="margin-top: 12px;">
+              <span class="label">Rate-Normalized Synchrony:</span>
+              <span class="val font-mono" id="clusterSynchronyVal">0.00x</span>
+            </div>
+            <div class="cluster-meter-track">
+              <div class="cluster-meter-fill synchrony-fill" id="meterSynchrony" style="width: 0%;"></div>
+            </div>
+
+            <div class="cluster-accounts-list" id="clusterAccountsList">
+              <span class="empty-hint">Waiting for coordinated clusters...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evidence & Signal Details -->
+        <div class="side-card">
+          <div class="panel-header">
+            <h3>Selected Message Evidence (Top 3)</h3>
+          </div>
+          <div class="evidence-body" id="evidenceBody">
+            <p class="empty-hint">Click on any message in the chat to inspect its exact evidence and feature breakdown.</p>
+          </div>
+        </div>
+
+        <!-- Scientific RQ Insights -->
+        <div class="side-card rq-insights-card">
+          <div class="panel-header">
+            <h3>Research Evaluation Insights</h3>
+          </div>
+          <div class="rq-content">
+            <div class="rq-item">
+              <span class="rq-tag">RQ1: Robustness</span>
+              <p>Text-only models fail at L2+ because LLM paraphrases alter vocabulary while preserving scam intent. The Campaign Detector detects the underlying cluster structure, timing, and topic drift.</p>
+            </div>
+            <div class="rq-item">
+              <span class="rq-tag">RQ2: Organic Hype</span>
+              <p>Chat-rate normalized synchrony prevents flagging hype bursts ("GG", "W", emote trains) because the entire stream accelerates together across diverse viewer accounts.</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

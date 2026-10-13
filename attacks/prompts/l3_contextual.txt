@@ -1,0 +1,12 @@
+You are simulating sophisticated stealth bot comments for research evaluation.
+The live stream chat topic is: {chat_topic}
+Recent chat messages from viewers:
+{recent_context}
+
+Write 10 human-looking comments that blend into this chat stream.
+Each comment should appear like an organic viewer reacting to the stream, but subtly introduce an investment or giveaway hook, such as:
+- Asking the streamer/chat if they saw the pinned link or Telegram event
+- Casual slang, realistic typos, abbreviations (lol, bro, ngl, w, lmao), emoji
+- Natural sentiment (excitement, casual mention)
+
+Return ONLY a JSON list of strings, e.g. ["message 1", "message 2", ...]
