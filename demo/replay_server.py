@@ -73,6 +73,16 @@ def get_index():
     return {"message": "Demo index.html not found"}
 
 
+@app.get("/style.css")
+def get_css():
+    return FileResponse(os.path.join(DEMO_DIR, "style.css"), media_type="text/css")
+
+
+@app.get("/app.js")
+def get_js():
+    return FileResponse(os.path.join(DEMO_DIR, "app.js"), media_type="application/javascript")
+
+
 @app.websocket("/ws/demo")
 async def demo_websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
