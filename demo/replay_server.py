@@ -24,7 +24,8 @@ sys.path.insert(0, ROOT_DIR)
 
 from ml.session_state import SessionState
 from ml.text_scorer import score_text
-from ml.campaign_detector import extract_campaign_features, clean_window
+from ml.campaign_detector import extract_campaign_features
+from ml.fusion import clean_window
 from ml.learned_fusion import get_learned_fusion_model
 
 logging.basicConfig(level=logging.INFO)
