@@ -1,0 +1,350 @@
+/* styles.css (v3) — Scam Shield In-Chat Styles */
+/* Clean, professional. No emojis. Works for live chat + top chat + replay. */
+
+/* ── Disabled state ────────────────────────────────────────────────────────── */
+body.scam-shield-disabled .trust-badge,
+body.scam-shield-disabled #scam-shield-floating-popover,
+body.scam-shield-disabled .trust-show-anyway {
+  display: none !important;
+}
+body.scam-shield-disabled .trust-collapsed {
+  max-height: unset !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+}
+
+/* ── Badge base ─────────────────────────────────────────────────── */
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 6px;
+  padding: 1px 6px 1px 4px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'Inter', Arial, sans-serif;
+  cursor: pointer;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  transition: opacity 0.15s ease, filter 0.15s ease;
+  white-space: nowrap;
+}
+
+.trust-badge:hover {
+  filter: brightness(1.15);
+}
+
+.badge-icon { font-size: 10px; line-height: 1; }
+.badge-score { font-size: 10px; font-weight: 700; line-height: 1; }
+
+/* ── 5-tier colors ─────────────────────────────────────────────────────────── */
+
+.trust-trusted {
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.28);
+}
+
+.trust-likely {
+  background: rgba(34, 211, 238, 0.10);
+  color: #22d3ee;
+  border-color: rgba(34, 211, 238, 0.25);
+}
+
+.trust-suspicious {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.28);
+}
+
+.trust-high-risk {
+  background: rgba(251, 146, 60, 0.14);
+  color: #fb923c;
+  border-color: rgba(251, 146, 60, 0.35);
+}
+
+.trust-scam {
+  background: rgba(248, 113, 113, 0.14);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.40);
+}
+
+/* ── Tier color indicators used in popover header ─────────────────────────── */
+.trust-trusted-indicator    { background: #4ade80; }
+.trust-likely-indicator     { background: #22d3ee; }
+.trust-suspicious-indicator { background: #fbbf24; }
+.trust-high-risk-indicator  { background: #fb923c; }
+.trust-scam-indicator       { background: #f87171; }
+
+/* ── Floating popover ──────────────────────────────────────────────────────── */
+#scam-shield-floating-popover {
+  position: fixed;
+  display: none;
+  background: #111118;
+  color: #e4e4e7;
+  border-radius: 8px;
+  width: 300px;
+  font-size: 12px;
+  font-family: 'Inter', Arial, sans-serif;
+  line-height: 1.5;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  z-index: 2147483647;
+  pointer-events: auto;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+#scam-shield-floating-popover::-webkit-scrollbar {
+  width: 6px;
+}
+#scam-shield-floating-popover::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+#scam-shield-floating-popover::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+#scam-shield-floating-popover::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Popover header */
+.popover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.popover-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.popover-tier-icon {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.popover-tier-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f4f4f5;
+}
+
+.popover-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Score ring */
+.popover-score-ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid var(--sc, #6366f1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.popover-score-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--sc, #6366f1);
+  line-height: 1;
+}
+
+.popover-score-sub {
+  font-size: 8px;
+  color: #52525b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Close button */
+.popover-close-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.05);
+  color: #71717a;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+  font-family: Arial, sans-serif;
+  padding: 0;
+  line-height: 1;
+}
+
+.popover-close-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #e4e4e7;
+}
+
+/* ── Verdict line ───────────────────────────────────────────────────────────── */
+.popover-verdict {
+  padding: 8px 14px;
+  font-size: 11.5px;
+  color: #a1a1aa;
+  line-height: 1.5;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ── Sections ───────────────────────────────────────────────────────────────── */
+.popover-section {
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.popover-section:last-of-type {
+  border-bottom: none;
+}
+
+.popover-section-title {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #3f3f46;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 7px;
+}
+
+/* ── Signal bars ────────────────────────────────────────────────────────────── */
+.signal-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.signal-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.signal-label {
+  font-size: 10.5px;
+  color: #71717a;
+  width: 82px;
+  flex-shrink: 0;
+}
+
+.signal-bar-track {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.signal-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.signal-pct {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #52525b;
+  width: 26px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Reasons list ──────────────────────────────────────────────────────────── */
+.reasons-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.reason-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 6px 8px;
+  border-radius: 5px;
+}
+
+.reason-flag     { background: rgba(248, 113, 113, 0.07); border-left: 2px solid rgba(248, 113, 113, 0.45); }
+.reason-positive { background: rgba(74, 222, 128, 0.07);  border-left: 2px solid rgba(74, 222, 128, 0.40); }
+.reason-info     { background: rgba(99, 102, 241, 0.07);  border-left: 2px solid rgba(99, 102, 241, 0.40); }
+
+/* Icon + text on the same row */
+.reason-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.reason-icon-badge {
+  font-size: 11px;
+  line-height: 1.4;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.reason-text {
+  font-size: 11.5px;
+  color: #d4d4d8;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.reason-signal-tag {
+  font-size: 9px;
+  color: #3f3f46;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-left: 17px; /* align under text, past the icon */
+}
+
+/* ── False positive button ──────────────────────────────────────────────────── */
+.ss-feedback-btn {
+  display: block;
+  width: calc(100% - 28px);
+  margin: 0 14px 12px;
+  padding: 7px 12px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 5px;
+  color: #71717a;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: 'Inter', Arial, sans-serif;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.ss-feedback-btn:hover:not(:disabled) {
+  border-color: rgba(74, 222, 128, 0.40);
+  color: #4ade80;
+}
+
+.ss-feedback-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}

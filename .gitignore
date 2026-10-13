@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pkl
+
+# Private and raw un-anonymized data
+data/raw_private/
+.env
+
+# Attack generation cache
+attacks/cache/
+
+# System and editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

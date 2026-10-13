@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "YT Live Chat Scam Detector",
+  "version": "1.0",
+  "description": "Real-time AI bot and scam comment detector for YouTube live chat.",
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://www.youtube.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*"],
+      "all_frames": true,
+      "css": ["styles.css"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_title": "Bot Detector Active",
+    "default_popup": "popup.html"
+  }
+}
