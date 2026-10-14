@@ -20,10 +20,22 @@ const statusPulse = document.getElementById("statusPulse");
 const statusLabel = document.getElementById("statusLabel");
 const stealthSelect = document.getElementById("stealthSelect");
 const speedSelect = document.getElementById("speedSelect");
+const focusedDemoToggle = document.getElementById("focusedDemoToggle");
 const sideBySideToggle = document.getElementById("sideBySideToggle");
 const btnPlay = document.getElementById("btnPlay");
 const btnPause = document.getElementById("btnPause");
 const btnReset = document.getElementById("btnReset");
+
+// Restore saved preferences across reloads
+if (localStorage.getItem("scamshield_stealth")) {
+  stealthSelect.value = localStorage.getItem("scamshield_stealth");
+}
+if (localStorage.getItem("scamshield_speed")) {
+  speedSelect.value = localStorage.getItem("scamshield_speed");
+}
+if (localStorage.getItem("scamshield_focused") !== null && focusedDemoToggle) {
+  focusedDemoToggle.checked = (localStorage.getItem("scamshield_focused") === "true");
+}
 
 // Metrics
 const valScanned = document.getElementById("valScanned");
@@ -121,12 +133,30 @@ function handleScoredMessage(data) {
   }
 
   const showSideBySide = sideBySideToggle.checked;
-  const b2PillHtml = showSideBySide
-    ? `<span class="side-by-side-comparison">
-         <span>Text-Only (B2):</span>
-         <span class="b2-pill ${b2.is_flagged ? "b2-match" : "b2-fail"}">${b2.verdict}</span>
-       </span>`
-    : "";
+  let b2PillHtml = "";
+  if (showSideBySide) {
+    if (isAttack) {
+      if (b2.is_flagged) {
+        b2PillHtml = `<span class="side-by-side-comparison">
+          <span class="b2-pill b2-caught">✅ B2 Caught (Flagged)</span>
+        </span>`;
+      } else {
+        b2PillHtml = `<span class="side-by-side-comparison">
+          <span class="b2-pill b2-missed">❌ Missed by B2 (Clear)</span>
+        </span>`;
+      }
+    } else {
+      if (b2.is_flagged) {
+        b2PillHtml = `<span class="side-by-side-comparison">
+          <span class="b2-pill b2-false-alarm">⚠️ B2 False Alarm</span>
+        </span>`;
+      } else {
+        b2PillHtml = `<span class="side-by-side-comparison">
+          <span class="b2-pill b2-neutral">Text-Only: Clear</span>
+        </span>`;
+      }
+    }
+  }
 
   row.innerHTML = `
     <div class="chat-meta">
@@ -204,30 +234,7 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;");
 }
 
-// ── Control Listeners ─────────────────────────────────────────────────────────
-
-btnPlay.addEventListener("click", () => {
-  if (!socket || socket.readyState !== WebSocket.OPEN) return;
-  isPlaying = true;
-  btnPlay.textContent = "▶ Replaying...";
-  statusLabel.textContent = `Streaming Level ${stealthSelect.value}...`;
-  socket.send(JSON.stringify({
-    type: "START",
-    speed: parseFloat(speedSelect.value),
-    stealth_level: stealthSelect.value,
-    side_by_side: sideBySideToggle.checked,
-  }));
-});
-
-btnPause.addEventListener("click", () => {
-  if (!socket || socket.readyState !== WebSocket.OPEN) return;
-  isPlaying = false;
-  btnPlay.textContent = "▶ Resume";
-  statusLabel.textContent = "Replay Paused";
-  socket.send(JSON.stringify({ type: "PAUSE" }));
-});
-
-btnReset.addEventListener("click", () => {
+function resetFeedAndMetrics() {
   chatFeed.innerHTML = "";
   if (placeholderFeed) {
     placeholderFeed.style.display = "block";
@@ -241,26 +248,88 @@ btnReset.addEventListener("click", () => {
   valScanned.textContent = "0";
   valAttacksTotal.textContent = "0";
   valRecallB4.textContent = "0.0%";
+  subRecallB4.textContent = "0 / 0 detected";
   valRecallB2.textContent = "0.0%";
+  subRecallB2.textContent = "Fails at L2+ Paraphrases";
   valPrecB4.textContent = "100.0%";
+  valFprB4.textContent = "FPR on Genuine: 0.0%";
   valAbstained.textContent = "0";
+}
+
+// ── Control Listeners ─────────────────────────────────────────────────────────
+
+btnPlay.addEventListener("click", () => {
+  if (!socket || socket.readyState !== WebSocket.OPEN) return;
+  isPlaying = true;
+  btnPlay.textContent = "▶ Replaying...";
+  statusLabel.textContent = `Streaming Level ${stealthSelect.value}...`;
+  resetFeedAndMetrics();
+  socket.send(JSON.stringify({
+    type: "START",
+    speed: parseFloat(speedSelect.value),
+    stealth_level: stealthSelect.value,
+    side_by_side: sideBySideToggle.checked,
+    focused_demo: focusedDemoToggle ? focusedDemoToggle.checked : true,
+  }));
+});
+
+btnPause.addEventListener("click", () => {
+  if (!socket || socket.readyState !== WebSocket.OPEN) return;
+  isPlaying = false;
+  btnPlay.textContent = "▶ Resume";
+  statusLabel.textContent = "Replay Paused";
+  socket.send(JSON.stringify({ type: "PAUSE" }));
+});
+
+btnReset.addEventListener("click", () => {
+  resetFeedAndMetrics();
   if (socket && socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify({ type: "PAUSE" }));
   }
   btnPlay.textContent = "▶ Start Replay";
   isPlaying = false;
+  statusLabel.textContent = "Connected to Replay Server";
 });
 
 stealthSelect.addEventListener("change", () => {
-  if (isPlaying && socket && socket.readyState === WebSocket.OPEN) {
-    socket.send(JSON.stringify({ type: "SET_LEVEL", stealth_level: stealthSelect.value }));
+  localStorage.setItem("scamshield_stealth", stealthSelect.value);
+  resetFeedAndMetrics();
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    isPlaying = true;
+    btnPlay.textContent = "▶ Replaying...";
+    statusLabel.textContent = `Streaming Level ${stealthSelect.value}...`;
+    socket.send(JSON.stringify({
+      type: "SET_LEVEL",
+      stealth_level: stealthSelect.value,
+      focused_demo: focusedDemoToggle ? focusedDemoToggle.checked : true,
+    }));
   }
 });
 
 speedSelect.addEventListener("change", () => {
+  localStorage.setItem("scamshield_speed", speedSelect.value);
   if (socket && socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify({ type: "SET_SPEED", speed: parseFloat(speedSelect.value) }));
   }
 });
+
+if (focusedDemoToggle) {
+  focusedDemoToggle.addEventListener("change", () => {
+    localStorage.setItem("scamshield_focused", focusedDemoToggle.checked);
+    resetFeedAndMetrics();
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      isPlaying = true;
+      btnPlay.textContent = "▶ Replaying...";
+      statusLabel.textContent = `Streaming Level ${stealthSelect.value}...`;
+      socket.send(JSON.stringify({
+        type: "START",
+        speed: parseFloat(speedSelect.value),
+        stealth_level: stealthSelect.value,
+        side_by_side: sideBySideToggle.checked,
+        focused_demo: focusedDemoToggle.checked,
+      }));
+    }
+  });
+}
 
 connectWS();

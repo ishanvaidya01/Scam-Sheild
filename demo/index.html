@@ -488,20 +488,35 @@ input:checked + .toggle-slider:before {
 }
 
 .b2-pill {
-  padding: 1px 6px;
+  padding: 2px 7px;
   border-radius: 4px;
   font-weight: 600;
   font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
 }
 
-.b2-fail {
-  background: rgba(239, 68, 68, 0.15);
+.b2-neutral {
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--text-dim);
+}
+
+.b2-missed {
+  background: rgba(239, 68, 68, 0.2);
   color: var(--accent-red);
+  border: 1px solid rgba(239, 68, 68, 0.4);
 }
 
-.b2-match {
-  background: rgba(16, 185, 129, 0.15);
+.b2-caught {
+  background: rgba(16, 185, 129, 0.2);
   color: var(--accent-green);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.b2-false-alarm {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--accent-amber);
 }
 
 /* ── Sidebar ──────────────────────────────────────────────────────────────── */
@@ -648,9 +663,9 @@ input:checked + .toggle-slider:before {
       <div class="control-group">
         <label for="stealthSelect">Stealth Level (RQ1):</label>
         <select id="stealthSelect" class="styled-select">
-          <option value="L0">L0 — Copy-Paste Burst</option>
+          <option value="L0" selected>L0 — Copy-Paste Burst</option>
           <option value="L1">L1 — Template Substitution</option>
-          <option value="L2" selected>L2 — LLM Paraphrase</option>
+          <option value="L2">L2 — LLM Paraphrase</option>
           <option value="L3">L3 — Contextual Chameleon</option>
           <option value="L4">L4 — Low-and-Slow Swarm</option>
           <option value="L3-single">L3-Single — Isolated Stealth Actor</option>
@@ -661,9 +676,18 @@ input:checked + .toggle-slider:before {
         <label for="speedSelect">Playback Speed:</label>
         <select id="speedSelect" class="styled-select">
           <option value="1">1x (Real-Time)</option>
-          <option value="5" selected>5x (Fast Demo)</option>
+          <option value="2" selected>2x (Normal Demo)</option>
+          <option value="5">5x (Fast Demo)</option>
           <option value="20">20x (Stress Test)</option>
         </select>
+      </div>
+
+      <div class="control-group switch-group">
+        <label class="toggle-switch">
+          <input type="checkbox" id="focusedDemoToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label" title="Fast-forwards to 8 messages before the bot attack, so you see attacks immediately">Focused Demo (Attacks at Msg 8)</span>
       </div>
 
       <div class="control-group switch-group">

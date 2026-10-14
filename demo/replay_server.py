@@ -45,8 +45,12 @@ DEMO_DIR = os.path.join(ROOT_DIR, "demo")
 DATA_DIR = os.path.join(ROOT_DIR, "data")
 
 
-def load_injected_session(stealth_level: str = "L2") -> List[Dict[str, Any]]:
-    """Loads a frozen injected session for demonstration."""
+def load_injected_session(stealth_level: str = "L0", focused_demo: bool = True) -> List[Dict[str, Any]]:
+    """Loads a frozen injected session for demonstration.
+
+    If focused_demo is True, windows the stream to start 8 genuine messages
+    before the attack burst, so the user sees the attack arrive in under 5 seconds!
+    """
     filename = f"session_eminem_test_{stealth_level}.jsonl"
     fpath = os.path.join(DATA_DIR, "injected", filename)
     if not os.path.exists(fpath):
@@ -62,6 +66,20 @@ def load_injected_session(stealth_level: str = "L2") -> List[Dict[str, Any]]:
 
     # Sort by timestamp
     messages.sort(key=lambda m: m.get("ts_ms", m.get("timestamp", 0)))
+
+    if focused_demo and messages:
+        # Locate injected attack indices
+        atk_indices = [
+            i for i, m in enumerate(messages)
+            if m.get("ground_truth") == "attack" or m.get("label") == "scam_campaign"
+        ]
+        if atk_indices:
+            first_atk = atk_indices[0]
+            last_atk = atk_indices[-1]
+            start_idx = max(0, first_atk - 8)
+            end_idx = min(len(messages), last_atk + 16)
+            messages = messages[start_idx:end_idx]
+
     return messages
 
 
@@ -92,9 +110,10 @@ async def demo_websocket_endpoint(websocket: WebSocket):
     fusion_model = get_learned_fusion_model()
 
     is_running = False
-    speed = 1.0
-    stealth_level = "L2"
+    speed = 2.0
+    stealth_level = "L0"
     side_by_side = True
+    focused_demo = True
 
     # Running metrics
     stats = {
@@ -109,9 +128,9 @@ async def demo_websocket_endpoint(websocket: WebSocket):
     }
 
     async def run_stream():
-        nonlocal is_running, speed, stealth_level, stats, session_state
-        messages = load_injected_session(stealth_level)
-        logger.info(f"Loaded {len(messages)} messages for level {stealth_level}.")
+        nonlocal is_running, speed, stealth_level, focused_demo, stats, session_state
+        messages = load_injected_session(stealth_level, focused_demo=focused_demo)
+        logger.info(f"Loaded {len(messages)} messages for level {stealth_level} (focused={focused_demo}).")
 
         session_state = SessionState()
         stats = {k: 0 for k in stats}
@@ -245,9 +264,10 @@ async def demo_websocket_endpoint(websocket: WebSocket):
             c_type = cmd.get("type")
 
             if c_type == "START":
-                speed = float(cmd.get("speed", 1.0))
-                stealth_level = cmd.get("stealth_level", "L2")
+                speed = float(cmd.get("speed", 2.0))
+                stealth_level = cmd.get("stealth_level", "L0")
                 side_by_side = bool(cmd.get("side_by_side", True))
+                focused_demo = bool(cmd.get("focused_demo", True))
                 is_running = True
                 if stream_task and not stream_task.done():
                     stream_task.cancel()
@@ -257,10 +277,11 @@ async def demo_websocket_endpoint(websocket: WebSocket):
                 is_running = False
 
             elif c_type == "SET_SPEED":
-                speed = float(cmd.get("speed", 1.0))
+                speed = float(cmd.get("speed", 2.0))
 
             elif c_type == "SET_LEVEL":
-                stealth_level = cmd.get("stealth_level", "L2")
+                stealth_level = cmd.get("stealth_level", "L0")
+                focused_demo = bool(cmd.get("focused_demo", True))
                 is_running = True
                 if stream_task and not stream_task.done():
                     stream_task.cancel()
