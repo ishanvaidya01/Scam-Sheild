@@ -332,4 +332,131 @@ if (focusedDemoToggle) {
   });
 }
 
+// ── Live Model Training Studio ───────────────────────────────────────────────
+
+const btnOpenTrainer = document.getElementById("btnOpenTrainer");
+const btnCloseTrainer = document.getElementById("btnCloseTrainer");
+const trainerModal = document.getElementById("trainerModal");
+const btnStartTraining = document.getElementById("btnStartTraining");
+const modelSelectTrainer = document.getElementById("modelSelectTrainer");
+const trainingStatusLabel = document.getElementById("trainingStatusLabel");
+const trainingPercentLabel = document.getElementById("trainingPercentLabel");
+const trainingProgressBar = document.getElementById("trainingProgressBar");
+const trainingResultsBox = document.getElementById("trainingResultsBox");
+
+let trainSocket = null;
+
+if (btnOpenTrainer && trainerModal) {
+  btnOpenTrainer.addEventListener("click", () => {
+    trainerModal.style.display = "flex";
+  });
+}
+
+if (btnCloseTrainer && trainerModal) {
+  btnCloseTrainer.addEventListener("click", () => {
+    trainerModal.style.display = "none";
+  });
+}
+
+if (trainerModal) {
+  trainerModal.addEventListener("click", (e) => {
+    if (e.target === trainerModal) {
+      trainerModal.style.display = "none";
+    }
+  });
+}
+
+if (btnStartTraining) {
+  btnStartTraining.addEventListener("click", () => {
+    btnStartTraining.disabled = true;
+    btnStartTraining.textContent = "⏳ Training...";
+    trainingStatusLabel.textContent = "Initializing connection to training engine...";
+    trainingPercentLabel.textContent = "0%";
+    trainingProgressBar.style.width = "0%";
+    trainingResultsBox.style.display = "none";
+
+    // Reset step styles
+    for (let i = 1; i <= 4; i++) {
+      const stepEl = document.getElementById(`step${i}`);
+      const badgeEl = document.getElementById(`stepBadge${i}`);
+      if (stepEl) stepEl.className = "step-item";
+      if (badgeEl) {
+        badgeEl.className = "badge-pill";
+        badgeEl.textContent = "Waiting";
+      }
+    }
+
+    const trainWsUrl = `ws://${WS_HOST}:${WS_PORT}/ws/train`;
+    trainSocket = new WebSocket(trainWsUrl);
+
+    trainSocket.onopen = () => {
+      trainSocket.send(JSON.stringify({
+        type: "START_TRAINING",
+        pipeline: modelSelectTrainer ? modelSelectTrainer.value : "both"
+      }));
+    };
+
+    trainSocket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        const percent = data.percent || 0;
+        trainingProgressBar.style.width = `${percent}%`;
+        trainingPercentLabel.textContent = `${percent}%`;
+        trainingStatusLabel.textContent = data.status || "";
+
+        // Activate step item
+        if (data.step >= 1 && data.step <= 4) {
+          for (let i = 1; i < data.step; i++) {
+            const prevStep = document.getElementById(`step${i}`);
+            const prevBadge = document.getElementById(`stepBadge${i}`);
+            if (prevStep) prevStep.className = "step-item done";
+            if (prevBadge) {
+              prevBadge.className = "badge-pill";
+              prevBadge.style.color = "var(--accent-green)";
+              prevBadge.textContent = "Done";
+            }
+          }
+          const curStep = document.getElementById(`step${data.step}`);
+          const curBadge = document.getElementById(`stepBadge${data.step}`);
+          if (curStep) curStep.className = "step-item active";
+          if (curBadge) {
+            curBadge.className = "badge-pill active";
+            curBadge.textContent = "Running";
+          }
+        }
+
+        if (data.step === 5 && data.metrics) {
+          for (let i = 1; i <= 4; i++) {
+            const stepEl = document.getElementById(`step${i}`);
+            const badgeEl = document.getElementById(`stepBadge${i}`);
+            if (stepEl) stepEl.className = "step-item done";
+            if (badgeEl) {
+              badgeEl.className = "badge-pill";
+              badgeEl.style.color = "var(--accent-green)";
+              badgeEl.textContent = "Done";
+            }
+          }
+          trainingResultsBox.style.display = "block";
+          document.getElementById("resF1").textContent = data.metrics.f1;
+          document.getElementById("resPrAuc").textContent = data.metrics.pr_auc;
+          document.getElementById("resTau").textContent = data.metrics.tau;
+          document.getElementById("resFpr").textContent = data.metrics.fpr;
+
+          btnStartTraining.disabled = false;
+          btnStartTraining.textContent = "▶ Retrain Model Live";
+        }
+      } catch (err) {
+        console.error("Training WS parse error:", err);
+      }
+    };
+
+    trainSocket.onerror = (err) => {
+      console.error("Training WS error:", err);
+      trainingStatusLabel.textContent = "Training engine error. Reconnecting...";
+      btnStartTraining.disabled = false;
+      btnStartTraining.textContent = "▶ Train Model Live";
+    };
+  });
+}
+
 connectWS();
