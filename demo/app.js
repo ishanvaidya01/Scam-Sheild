@@ -26,6 +26,36 @@ const btnPlay = document.getElementById("btnPlay");
 const btnPause = document.getElementById("btnPause");
 const btnReset = document.getElementById("btnReset");
 
+// Theme Toggle (Defaults to Clean Light Theme)
+const themeToggleBtn = document.getElementById("themeToggleBtn");
+const themeToggleIcon = document.getElementById("themeToggleIcon");
+const themeToggleText = document.getElementById("themeToggleText");
+
+function setTheme(theme) {
+  if (theme === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+    if (themeToggleIcon) themeToggleIcon.textContent = "🌙";
+    if (themeToggleText) themeToggleText.textContent = "Dark";
+    localStorage.setItem("scamshield_theme", "dark");
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+    if (themeToggleIcon) themeToggleIcon.textContent = "☀️";
+    if (themeToggleText) themeToggleText.textContent = "Light";
+    localStorage.setItem("scamshield_theme", "light");
+  }
+}
+
+// Restore theme (defaults to light)
+const savedTheme = localStorage.getItem("scamshield_theme") || "light";
+setTheme(savedTheme);
+
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener("click", () => {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    setTheme(isDark ? "light" : "dark");
+  });
+}
+
 // Restore saved preferences across reloads
 if (localStorage.getItem("scamshield_stealth")) {
   stealthSelect.value = localStorage.getItem("scamshield_stealth");
@@ -64,8 +94,8 @@ function connectWS() {
   socket = new WebSocket(WS_URL);
 
   socket.onopen = () => {
-    statusPulse.style.background = "#10b981";
-    statusPulse.style.boxShadow = "0 0 8px #10b981";
+    statusPulse.style.background = "var(--accent-green)";
+    statusPulse.style.boxShadow = "none";
     statusLabel.textContent = "Connected to Replay Server";
   };
 
@@ -85,8 +115,8 @@ function connectWS() {
   };
 
   socket.onclose = () => {
-    statusPulse.style.background = "#ef4444";
-    statusPulse.style.boxShadow = "0 0 8px #ef4444";
+    statusPulse.style.background = "var(--accent-red)";
+    statusPulse.style.boxShadow = "none";
     statusLabel.textContent = "Disconnected — Reconnecting...";
     setTimeout(connectWS, 2000);
   };

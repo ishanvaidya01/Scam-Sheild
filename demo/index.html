@@ -8,717 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
-  <style>
-/* ==========================================================================
-   Scam Shield — Live Inspector Styling (Vanilla CSS, Modern Dark Aesthetic)
-   ========================================================================== */
-
-:root {
-  --bg-dark: #0a0d14;
-  --bg-card: #111622;
-  --bg-card-hover: #161c2d;
-  --bg-card-border: #1e2638;
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
-
-  --accent-blue: #38bdf8;
-  --accent-cyan: #06b6d4;
-  --accent-green: #10b981;
-  --accent-amber: #f59e0b;
-  --accent-red: #ef4444;
-  --accent-purple: #a855f7;
-
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --font-mono: 'JetBrains Mono', monospace;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background-color: var(--bg-dark);
-  color: var(--text-main);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
-}
-
-.font-mono {
-  font-family: var(--font-mono);
-}
-
-.app-layout {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  padding: 16px;
-  gap: 12px;
-}
-
-/* ── Top Header ───────────────────────────────────────────────────────────── */
-.top-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--bg-card);
-  border: 1px solid var(--bg-card-border);
-  border-radius: var(--radius-lg);
-  padding: 12px 20px;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.logo-icon {
-  font-size: 26px;
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.2));
-  padding: 8px 12px;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-}
-
-.brand-title {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.badge-version {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  background: rgba(56, 189, 248, 0.15);
-  color: var(--accent-blue);
-  border-radius: 999px;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-}
-
-.brand-sub {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.status-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 6px 14px;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  border-radius: 999px;
-}
-
-.status-pulse {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent-green);
-  box-shadow: 0 0 8px var(--accent-green);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(0.95); opacity: 0.8; }
-  50% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(0.95); opacity: 0.8; }
-}
-
-/* ── Controls Panel ───────────────────────────────────────────────────────── */
-.controls-panel {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  background: var(--bg-card);
-  border: 1px solid var(--bg-card-border);
-  border-radius: var(--radius-lg);
-  padding: 12px 20px;
-  flex-wrap: wrap;
-}
-
-.control-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-muted);
-}
-
-.styled-select {
-  background: var(--bg-dark);
-  color: var(--text-main);
-  border: 1px solid var(--bg-card-border);
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  font-weight: 500;
-  outline: none;
-  cursor: pointer;
-}
-
-.styled-select:focus {
-  border-color: var(--accent-blue);
-}
-
-.switch-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-left: auto;
-}
-
-.toggle-switch {
-  position: relative;
-  width: 36px;
-  height: 20px;
-}
-
-.toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggle-slider {
-  position: absolute;
-  inset: 0;
-  background: var(--bg-card-border);
-  border-radius: 20px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.toggle-slider:before {
-  content: "";
-  position: absolute;
-  height: 14px;
-  width: 14px;
-  left: 3px;
-  bottom: 3px;
-  background: white;
-  border-radius: 50%;
-  transition: 0.2s;
-}
-
-input:checked + .toggle-slider {
-  background: var(--accent-blue);
-}
-
-input:checked + .toggle-slider:before {
-  transform: translateX(16px);
-}
-
-.toggle-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-main);
-}
-
-.btn-group {
-  display: flex;
-  gap: 8px;
-}
-
-.btn {
-  padding: 7px 16px;
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.btn-primary {
-  background: var(--accent-blue);
-  color: #04101e;
-}
-.btn-primary:hover {
-  background: #7dd3fc;
-}
-
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-main);
-}
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.btn-tertiary {
-  background: transparent;
-  color: var(--text-dim);
-  border: 1px solid var(--bg-card-border);
-}
-.btn-tertiary:hover {
-  color: var(--text-main);
-  border-color: var(--text-muted);
-}
-
-/* ── Metrics Strip ────────────────────────────────────────────────────────── */
-.metrics-strip {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 12px;
-}
-
-.metric-card {
-  background: var(--bg-card);
-  border: 1px solid var(--bg-card-border);
-  border-radius: var(--radius-md);
-  padding: 12px 14px;
-  display: flex;
-  flex-direction: column;
-}
-
-.metric-title {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-dim);
-  letter-spacing: 0.05em;
-}
-
-.metric-value {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin: 2px 0;
-  font-family: var(--font-mono);
-}
-
-.metric-sub {
-  font-size: 11px;
-  color: var(--text-dim);
-}
-
-.accent-amber { color: var(--accent-amber); }
-.accent-green { color: var(--accent-green); }
-.accent-red   { color: var(--accent-red); }
-.accent-cyan  { color: var(--accent-cyan); }
-.accent-purple{ color: var(--accent-purple); }
-
-/* ── Workspace ────────────────────────────────────────────────────────────── */
-.main-workspace {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 12px;
-  flex: 1;
-  min-height: 0;
-}
-
-.chat-container, .side-card {
-  background: var(--bg-card);
-  border: 1px solid var(--bg-card-border);
-  border-radius: var(--radius-lg);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.panel-header {
-  padding: 12px 18px;
-  border-bottom: 1px solid var(--bg-card-border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.panel-header h2 {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.panel-header h3 {
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.feed-indicator {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--accent-green);
-  letter-spacing: 0.05em;
-}
-
-/* ── Chat Feed ────────────────────────────────────────────────────────────── */
-.chat-scroll {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.empty-feed-placeholder {
-  margin: auto;
-  text-align: center;
-  color: var(--text-dim);
-  font-size: 13px;
-  max-width: 320px;
-}
-
-.chat-row {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  transition: all 0.15s ease;
-  cursor: pointer;
-}
-
-.chat-row:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--bg-card-border);
-}
-
-.chat-row.is-attack {
-  background: rgba(239, 68, 68, 0.04);
-  border-left: 3px solid var(--accent-red);
-}
-
-.chat-row.is-selected {
-  border-color: var(--accent-blue);
-  background: rgba(56, 189, 248, 0.06);
-}
-
-.chat-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
-  font-size: 11px;
-}
-
-.author-pill {
-  font-family: var(--font-mono);
-  color: var(--accent-blue);
-  font-weight: 600;
-}
-
-.timestamp-text {
-  color: var(--text-dim);
-}
-
-.gt-badge {
-  font-size: 10px;
-  font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 4px;
-  text-transform: uppercase;
-}
-
-.gt-genuine {
-  background: rgba(148, 163, 184, 0.15);
-  color: var(--text-muted);
-}
-
-.gt-attack {
-  background: rgba(239, 68, 68, 0.2);
-  color: var(--accent-red);
-}
-
-.chat-text {
-  font-size: 13px;
-  color: var(--text-main);
-  word-break: break-word;
-}
-
-.chat-verdicts {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.verdict-tag {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.verdict-clear {
-  background: rgba(16, 185, 129, 0.15);
-  color: var(--accent-green);
-}
-
-.verdict-suspicious {
-  background: rgba(245, 158, 11, 0.15);
-  color: var(--accent-amber);
-}
-
-.verdict-campaign {
-  background: rgba(239, 68, 68, 0.2);
-  color: var(--accent-red);
-}
-
-.verdict-unverifiable {
-  background: rgba(168, 85, 247, 0.15);
-  color: var(--accent-purple);
-}
-
-.side-by-side-comparison {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  color: var(--text-dim);
-}
-
-.b2-pill {
-  padding: 2px 7px;
-  border-radius: 4px;
-  font-weight: 600;
-  font-size: 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.b2-neutral {
-  background: rgba(148, 163, 184, 0.12);
-  color: var(--text-dim);
-}
-
-.b2-missed {
-  background: rgba(239, 68, 68, 0.2);
-  color: var(--accent-red);
-  border: 1px solid rgba(239, 68, 68, 0.4);
-}
-
-.b2-caught {
-  background: rgba(16, 185, 129, 0.2);
-  color: var(--accent-green);
-  border: 1px solid rgba(16, 185, 129, 0.4);
-}
-
-.b2-false-alarm {
-  background: rgba(245, 158, 11, 0.2);
-  color: var(--accent-amber);
-}
-
-/* ── Sidebar ──────────────────────────────────────────────────────────────── */
-.sidebar-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-}
-
-.cluster-body, .evidence-body {
-  padding: 14px 18px;
-}
-
-.badge-pill {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 999px;
-  color: var(--text-dim);
-}
-
-.badge-pill.active {
-  background: rgba(239, 68, 68, 0.2);
-  color: var(--accent-red);
-}
-
-.cluster-metric-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  margin-bottom: 4px;
-}
-
-.cluster-meter-track {
-  width: 100%;
-  height: 6px;
-  background: var(--bg-dark);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.cluster-meter-fill {
-  height: 100%;
-  background: var(--accent-blue);
-  border-radius: 999px;
-  transition: width 0.3s ease;
-}
-
-.synchrony-fill {
-  background: var(--accent-amber);
-}
-
-.cluster-accounts-list {
-  margin-top: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.account-chip {
-  font-size: 11px;
-  font-family: var(--font-mono);
-  background: rgba(56, 189, 248, 0.1);
-  color: var(--accent-blue);
-  padding: 2px 8px;
-  border-radius: 4px;
-}
-
-.empty-hint {
-  font-size: 12px;
-  color: var(--text-dim);
-}
-
-/* ── Evidence List ────────────────────────────────────────────────────────── */
-.evidence-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.evidence-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 8px 10px;
-  background: var(--bg-dark);
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-}
-
-.evidence-item.flag {
-  border-left: 2px solid var(--accent-red);
-}
-
-.evidence-item.positive {
-  border-left: 2px solid var(--accent-green);
-}
-
-.rq-insights-card .rq-content {
-  padding: 14px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.rq-item {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.rq-tag {
-  font-weight: 700;
-  color: var(--text-main);
-  display: block;
-  margin-bottom: 2px;
-}
-
-/* ── Modal: Live Training Studio ─────────────────────────────────────────── */
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(10, 13, 20, 0.85);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.modal-card {
-  background: var(--bg-card);
-  border: 1px solid var(--bg-card-border);
-  border-radius: var(--radius-lg);
-  width: 100%;
-  max-width: 650px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
-  animation: modalFadeIn 0.2s ease-out;
-}
-
-@keyframes modalFadeIn {
-  from { opacity: 0; transform: translateY(-10px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.modal-header {
-  padding: 16px 20px;
-  background: rgba(255, 255, 255, 0.02);
-  border-bottom: 1px solid var(--bg-card-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 24px;
-  cursor: pointer;
-  line-height: 1;
-}
-
-.modal-close:hover {
-  color: var(--text-main);
-}
-
-.modal-body {
-  padding: 20px;
-}
-
-.step-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: var(--text-muted);
-  transition: all 0.2s ease;
-}
-
-.step-item.active {
-  border-color: var(--accent-blue);
-  background: rgba(56, 189, 248, 0.06);
-  color: var(--text-main);
-}
-
-.step-item.done {
-  border-color: rgba(16, 185, 129, 0.3);
-  background: rgba(16, 185, 129, 0.04);
-  color: var(--text-main);
-}
-
-  </style>
 </head>
 <body>
   <div class="app-layout">
@@ -733,8 +22,11 @@ input:checked + .toggle-slider:before {
       </div>
 
       <div class="header-status">
-        <button id="btnOpenTrainer" class="btn btn-secondary" style="font-size: 11px; padding: 6px 14px; display: inline-flex; align-items: center; gap: 6px; border-color: rgba(56,189,248,0.4); color: var(--accent-blue); background: rgba(56,189,248,0.08); font-weight: 600;">
+        <button id="btnOpenTrainer" class="btn btn-secondary">
           <span>⚡</span> Live Model Training Studio
+        </button>
+        <button id="themeToggleBtn" class="btn btn-ghost" title="Toggle Light / Dark Theme">
+          <span id="themeToggleIcon">☀️</span> <span id="themeToggleText">Light</span>
         </button>
         <div class="status-indicator">
           <span class="status-pulse" id="statusPulse"></span>
@@ -905,107 +197,111 @@ input:checked + .toggle-slider:before {
             </div>
           </div>
         </div>
+      </aside>
+    </main>
+  </div>
+
   <!-- Modal: Live Model Training Studio -->
   <div id="trainerModal" class="modal-backdrop" style="display: none;">
     <div class="modal-card">
       <div class="modal-header">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <span style="font-size: 22px;">🎓</span>
+        <div class="modal-title-group">
+          <span class="modal-icon">🎓</span>
           <div>
-            <h3 style="font-size: 15px; font-weight: 700;">Live Model Training & Calibration Studio</h3>
-            <p style="font-size: 11px; color: var(--text-dim);">Live demonstration of model retraining, gradient optimization, and decision threshold calibration</p>
+            <h3 class="modal-title">Live Model Training &amp; Calibration Studio</h3>
+            <p class="modal-subtitle">Live demonstration of model retraining, gradient optimization, and decision threshold calibration</p>
           </div>
         </div>
-        <button id="btnCloseTrainer" class="modal-close">&times;</button>
+        <button id="btnCloseTrainer" class="modal-close" aria-label="Close modal">&times;</button>
       </div>
 
       <div class="modal-body">
-        <div style="display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <label for="modelSelectTrainer" style="font-size: 12px; color: var(--text-muted);">Pipeline Target:</label>
-            <select id="modelSelectTrainer" class="styled-select" style="font-size: 11px; padding: 5px 10px;">
+        <div class="trainer-controls">
+          <div class="trainer-target-group">
+            <label for="modelSelectTrainer" class="trainer-label">Pipeline Target:</label>
+            <select id="modelSelectTrainer" class="styled-select trainer-select">
               <option value="both" selected>Full Pipeline (Text-Intent + Campaign Fusion)</option>
               <option value="text">Text Intent (Char N-Gram TF-IDF + LogReg)</option>
               <option value="fusion">Campaign Fusion (11 Multi-Signal Features)</option>
             </select>
           </div>
-          <button id="btnStartTraining" class="btn btn-primary" style="font-size: 12px; padding: 6px 16px;">
+          <button id="btnStartTraining" class="btn btn-primary">
             ▶ Train Model Live
           </button>
         </div>
 
         <!-- Progress Bar & Percentage -->
-        <div class="progress-container" style="margin-top: 18px;">
-          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;">
-            <span id="trainingStatusLabel" style="color: var(--accent-blue); font-weight: 600;">Ready to train on DEV split</span>
-            <span id="trainingPercentLabel" class="font-mono" style="font-weight: 700; color: var(--accent-green);">0%</span>
+        <div class="progress-container">
+          <div class="progress-header">
+            <span id="trainingStatusLabel" class="progress-status">Ready to train on DEV split</span>
+            <span id="trainingPercentLabel" class="font-mono progress-percent">0%</span>
           </div>
-          <div class="progress-bar-track" style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; border: 1px solid var(--bg-card-border);">
-            <div id="trainingProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #38bdf8, #10b981); border-radius: 999px; transition: width 0.3s ease;"></div>
+          <div class="progress-bar-track">
+            <div id="trainingProgressBar" class="progress-bar-fill"></div>
           </div>
         </div>
 
         <!-- Live Step Badges -->
-        <div id="trainingSteps" style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px;">
+        <div id="trainingSteps" class="steps-list">
           <div class="step-item" id="step1">
-            <span style="font-size: 14px;">📥</span>
-            <div style="flex: 1;">
-              <div style="font-size: 12px; font-weight: 600;">Phase 1: Load DEV Training Split</div>
-              <div style="font-size: 11px; color: var(--text-dim);">1,138 comments across authentic YouTube live streams (split by video)</div>
+            <span class="step-icon">📥</span>
+            <div class="step-content">
+              <div class="step-title">Phase 1: Load DEV Training Split</div>
+              <div class="step-desc">1,138 comments across authentic YouTube live streams (split by video)</div>
             </div>
             <span class="badge-pill" id="stepBadge1">Waiting</span>
           </div>
 
           <div class="step-item" id="step2">
-            <span style="font-size: 14px;">🔤</span>
-            <div style="flex: 1;">
-              <div style="font-size: 12px; font-weight: 600;">Phase 2: Subword & Dense Vectorization</div>
-              <div style="font-size: 11px; color: var(--text-dim);">Char N-Grams (2 to 5) TF-IDF + all-MiniLM-L6-v2 dense 384-d semantic matrix</div>
+            <span class="step-icon">🔤</span>
+            <div class="step-content">
+              <div class="step-title">Phase 2: Subword &amp; Dense Vectorization</div>
+              <div class="step-desc">Char N-Grams (2 to 5) TF-IDF + all-MiniLM-L6-v2 dense 384-d semantic matrix</div>
             </div>
             <span class="badge-pill" id="stepBadge2">Waiting</span>
           </div>
 
           <div class="step-item" id="step3">
-            <span style="font-size: 14px;">⚙️</span>
-            <div style="flex: 1;">
-              <div style="font-size: 12px; font-weight: 600;">Phase 3: Gradient Descent & Multi-Signal Fusion</div>
-              <div style="font-size: 11px; color: var(--text-dim);">L-BFGS solver optimization across 11 structural coordination features</div>
+            <span class="step-icon">⚙️</span>
+            <div class="step-content">
+              <div class="step-title">Phase 3: Gradient Descent &amp; Multi-Signal Fusion</div>
+              <div class="step-desc">L-BFGS solver optimization across 11 structural coordination features</div>
             </div>
             <span class="badge-pill" id="stepBadge3">Waiting</span>
           </div>
 
           <div class="step-item" id="step4">
-            <span style="font-size: 14px;">🎯</span>
-            <div style="flex: 1;">
-              <div style="font-size: 12px; font-weight: 600;">Phase 4: Decision Threshold Calibration</div>
-              <div style="font-size: 11px; color: var(--text-dim);">Calibrates tau to mathematically guarantee FPR on genuine &le; 1.0%</div>
+            <span class="step-icon">🎯</span>
+            <div class="step-content">
+              <div class="step-title">Phase 4: Decision Threshold Calibration</div>
+              <div class="step-desc">Calibrates &tau; to guarantee FPR on genuine &le; 1.0%</div>
             </div>
             <span class="badge-pill" id="stepBadge4">Waiting</span>
           </div>
         </div>
 
         <!-- Live Training Results Box -->
-        <div id="trainingResultsBox" style="display: none; margin-top: 16px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); padding: 14px 18px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <span style="font-size: 12px; font-weight: 700; color: var(--accent-green);">🏆 MODEL RETRAINED & CALIBRATED SUCCESSFULLY</span>
-            <span style="font-size: 10px; font-family: var(--font-mono); color: var(--text-dim);">Artifact: ml/_fusion_model.pkl</span>
+        <div id="trainingResultsBox" class="results-box" style="display: none;">
+          <div class="results-header">
+            <span class="results-title">🏆 MODEL RETRAINED &amp; CALIBRATED SUCCESSFULLY</span>
+            <span class="results-artifact">Artifact: ml/_fusion_model.pkl</span>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center; margin-top: 10px;">
-            <div style="background: var(--bg-dark); padding: 8px; border-radius: var(--radius-sm);">
-              <div style="font-size: 10px; color: var(--text-dim);">F1 SCORE</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--accent-green);" id="resF1">94.78%</div>
+          <div class="results-grid">
+            <div class="metric-mini-card">
+              <div class="metric-mini-label">F1 SCORE</div>
+              <div class="metric-mini-val accent-green" id="resF1">94.78%</div>
             </div>
-            <div style="background: var(--bg-dark); padding: 8px; border-radius: var(--radius-sm);">
-              <div style="font-size: 10px; color: var(--text-dim);">PR-AUC</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--accent-blue);" id="resPrAuc">0.9894</div>
+            <div class="metric-mini-card">
+              <div class="metric-mini-label">PR-AUC</div>
+              <div class="metric-mini-val accent-blue" id="resPrAuc">0.9894</div>
             </div>
-            <div style="background: var(--bg-dark); padding: 8px; border-radius: var(--radius-sm);">
-              <div style="font-size: 10px; color: var(--text-dim);">CALIBRATED &tau;</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--accent-amber);" id="resTau">0.9220</div>
+            <div class="metric-mini-card">
+              <div class="metric-mini-label">CALIBRATED &tau;</div>
+              <div class="metric-mini-val accent-amber" id="resTau">0.9220</div>
             </div>
-            <div style="background: var(--bg-dark); padding: 8px; border-radius: var(--radius-sm);">
-              <div style="font-size: 10px; color: var(--text-dim);">GENUINE FPR</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--accent-purple);" id="resFpr">&le; 1.0%</div>
+            <div class="metric-mini-card">
+              <div class="metric-mini-label">GENUINE FPR</div>
+              <div class="metric-mini-val accent-purple" id="resFpr">&le; 1.0%</div>
             </div>
           </div>
         </div>
