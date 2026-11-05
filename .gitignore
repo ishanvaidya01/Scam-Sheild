@@ -6,7 +6,6 @@ __pycache__/
 
 # Private and raw un-anonymized data
 data/raw_private/
-.env
 .salt_secret
 
 # Attack generation cache
@@ -16,4 +15,5 @@ attacks/cache/
 .DS_Store
 Thumbs.db
 .idea/
-.vscode/
+config.bat
+node_modules
